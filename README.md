@@ -227,7 +227,7 @@ Selanjutnya jika waktu saat ini sama dengan waktu ulang tahun stephany, maka pro
 
 Setelah selesai dizip, maka program akan kembali di-fork. folder dan file zip yang dihasilkan pada proses sebelumnya kecuali zip akhir akan dihapus pada proes anaknya.
 
-**Dokumentasi**
+### **Dokumentasi**
 ![image](https://user-images.githubusercontent.com/62102884/115996471-fa5d3780-a611-11eb-8d39-59af2fbdb500.png)
 isi folder _/tmp_ pada tanggal 9 APR 2021 pukul 16:22:00. Terdapat fie yang didownload dan folder dari hasil ekstraknya.
 
