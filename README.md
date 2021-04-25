@@ -536,7 +536,7 @@ void folder(char *foldername){
 
 ### **Soal 3b**
 Setiap direktori yang sudah dibuat diisi dengan 10 gambar yang didownload dari https://picsum.photos/, dimana setiap gambar akan didownload setiap 5 detik. Setiap gambar yang didownload akan diberi nama dengan format timestamp [YYYY-mm-dd_HH:ii:ss] dan gambar  ersebut berbentuk persegi dengan ukuran (n%1000) + 50 pixel dimana n adalah detik Epoch Unix.
-Berikut merupakan fungsi untuk mengunduh 10 gambar dengan jeda 5 detik dari https://picsum.photos/ dengan ketentuan ukuran (n%1000) + 50 pixel dimana n adalah detik Epoch Unix. Dengan menghitung nilai dari (n%1000) + 50 kemudian disimpan dalam variable dan nantinya akan dimasukkan ke dalam link https://picsum.photos/.
+Berikut merupakan fungsi untuk mengunduh 10 gambar dengan jeda 5 detik dari https://picsum.photos/ dengan ketentuan ukuran `(n%1000) + 50` pixel dimana `n` adalah detik Epoch Unix. Dengan menghitung nilai dari `(n%1000) + 50` kemudian disimpan dalam variable dan nantinya akan dimasukkan ke dalam link https://picsum.photos/.
 ``` 
 void downloader(char *foldername){
   time_t rawtime;
@@ -568,7 +568,7 @@ void downloader(char *foldername){
 
 ### **Soal 3c**
 Setelah direktori telah terisi dengan 10 gambar, program tersebut akan membuat sebuah file “status.txt”, dimana didalamnya berisi pesan “Download Success” yang terenkripsi dengan teknik Caesar Cipher dan dengan shift 5. Caesar Cipher adalah Teknik enkripsi sederhana yang dimana dapat melakukan enkripsi string sesuai dengan shift/key yang kita tentukan. Misal huruf “A” akan dienkripsi dengan shift 4 maka akan menjadi “E”. Karena Ranora orangnya perfeksionis dan rapi, dia ingin setelah file tersebut dibuat, direktori akan di zip dan direktori akan didelete, sehingga menyisakan hanya file zip saja.
-Berikut merupakan fungsi untuk membuat file status.txt yang didalamnya terdapat pesan Download Success yang nantinya akan dienkripsi menggunakan Caesar Cipher. Kemudian file tersebut akan disimpan kedalam direktori yang sudah dibuat sebelumnya.
+Berikut merupakan fungsi untuk membuat file `status.txt` yang didalamnya terdapat pesan Download Success yang nantinya akan dienkripsi menggunakan Caesar Cipher. Kemudian file tersebut akan disimpan kedalam direktori yang sudah dibuat sebelumnya.
 ```
 void message(char *foldername){
   char dir[100];
@@ -655,7 +655,7 @@ FILE *killer = fopen("killer.sh", "w");
 ```
 
 ### **Soal 3e**
-Berikut merupakan fungsi untuk membuat program killer yang merupakan program bash untuk menghentikan proses. Program yang dibuat sesuai dengan argumen yang diinput saat program dijalankan. Untuk argumen -z script akan berisi command yang akan menghentikan seluruh proses terjadi. Sedangkan argumen -x akan berisi command untuk menghentikan progrma utama namun membiarkan proses di setiap direktori yang masih berjalan hingga selesai (Direktori yang sudah dibuat akan mendownload gambar sampai selesai dan membuat file txt, lalu zip dan delete direktori) dengan passing value getpid() saat memanggil fungsi.
+Berikut merupakan fungsi untuk membuat program killer yang merupakan program bash untuk menghentikan proses. Program yang dibuat sesuai dengan argumen yang diinput saat program dijalankan. Untuk argumen `-z` script akan berisi command yang akan menghentikan seluruh proses terjadi. Sedangkan argumen `-x` akan berisi command untuk menghentikan progrma utama namun membiarkan proses di setiap direktori yang masih berjalan hingga selesai (Direktori yang sudah dibuat akan mendownload gambar sampai selesai dan membuat file txt, lalu zip dan delete direktori dengan passing value `getpid()` saat memanggil fungsi.
 ```
 void killer(char const *argv[], int pid){
   FILE *killer = fopen("killer.sh", "w");
@@ -673,7 +673,7 @@ void killer(char const *argv[], int pid){
 }
 ```
 
-Berikut merupakan fungsi main() untuk memanggil  fungsi diatas dengan dengan jeda setiap 40 detik dan passing value untuk nama folder sesuai dengan nama sesuai timestamp [YYYY-mm-dd_HH:ii:ss].
+Berikut merupakan fungsi `main()` untuk memanggil  fungsi diatas dengan dengan jeda setiap 40 detik dan passing value untuk nama folder sesuai dengan nama sesuai timestamp [YYYY-mm-dd_HH:ii:ss].
 
 ```
 int main(int argc, char const *argv[]) {
