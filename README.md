@@ -237,6 +237,8 @@ isi folder pada 9 APR 2021 pukul 22:22:00. Dapat dilihat zip dan folder yang tel
 ![image](https://user-images.githubusercontent.com/62102884/115996662-c7677380-a612-11eb-8212-18e4325fc89d.png)
 pada folder _/home/[user]_ terdapat file zip  _Lopyu_Sten=vany.zip_ 
 
+### **Kendala**
+Sempat bingung ketika mencari cara agar program dapat berjalan otomatis 6 jam sebelum ulang tahun stevany.
 
 
 
