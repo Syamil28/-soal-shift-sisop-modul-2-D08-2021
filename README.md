@@ -229,42 +229,286 @@ Setelah selesai dizip, maka program akan kembali di-fork. folder dan file zip ya
 
 **Dokumentasi**
 ![image](https://user-images.githubusercontent.com/62102884/115996471-fa5d3780-a611-11eb-8d39-59af2fbdb500.png)
-isi folder __/tmp__ pada tanggal 9 APR 2021 pukul 16:22:00. Terdapat fie yang didownload dan folder dari hasil ekstraknya.
+isi folder _/tmp_ pada tanggal 9 APR 2021 pukul 16:22:00. Terdapat fie yang didownload dan folder dari hasil ekstraknya.
 
 ![image](https://user-images.githubusercontent.com/62102884/115996646-b1f24980-a612-11eb-9dad-caae17710680.png)
 isi folder pada 9 APR 2021 pukul 22:22:00. Dapat dilihat zip dan folder yang telah didownload sudah dihapus.
 
 ![image](https://user-images.githubusercontent.com/62102884/115996662-c7677380-a612-11eb-8212-18e4325fc89d.png)
-pada folder _/home/[user]_ terdapat file zip  __Lopyu_Stevany.zip__
-
-![image](https://user-images.githubusercontent.com/62102884/115996922-d26ed380-a613-11eb-90e4-df35e6baf112.png)
-isi daripada file zip __Lopyu_Stephany.zip__
+pada folder _/home/[user]_ terdapat file zip  _Lopyu_Sten=vany.zip_ 
 
 
 
-### **Penyelesaian Soal 2**
+
+
+## **Soal 2**
+
+### **Penyelesaian**
+
+```c
+#include<stdlib.h>
+#include<sys/types.h>
+#include<unistd.h>
+#include<dirent.h>
+#include<sys/wait.h>
+#include<stdio.h>
+#include<string.h>
+
+char direct[50]="/home/yudo/Documents/Modul2/petshop";
+
+void proceed(char perintah[],char *arg[]){
+        int status;
+        pid_t child_id;
+        child_id=fork();
+        
+        if(child_id==0){
+            execv(perintah,arg);
+        }
+        else{
+           ((wait(&status))>0);
+        }
+}
+
+char* cut(char *arr){
+        int n,i;
+        char* cuts; 
+        for(i=0;arr[i]!='\0';i++);
+           n=i-4+1;
+
+        cuts=(char*)malloc(n*sizeof(char));
+
+        for(i=0;i<n-1;i++)
+            cuts[i]=arr[i];
+        cuts[i]='\0';
+        return cuts;
+}
+
+int main() {
+        pid_t pid1;
+        int status;
+        pid1 = fork();
+
+        if(pid1<0){
+            exit(EXIT_FAILURE);
+        }
+
+        if(pid1==0){
+            char *argv[]={"mkdir","-p",direct,NULL};
+            proceed("/bin/mkdir",argv);
+
+            char *argv2[]={"unzip","-q","pets.zip","-d",direct,NULL};
+            execv("/usr/bin/unzip",argv2);
+        }
+
+        while((wait(NULL))>0);
+
+        DIR *dir=opendir(direct);
+        struct dirent *dent;
+        if(dir!=NULL){
+        while((dent=readdir(dir))!=NULL){
+                if(strcmp(dent->d_name,".")==0 || strcmp(dent->d_name,"..")==0) continue; 
+                if(fork()==0)  continue;
+                else if(dent->d_type==DT_DIR){
+                        char fileName[100]="/home/yudo/Documents/Modul2/petshop/";
+                        strcat(fileName,dent->d_name);
+                        
+                        char *argv[]={"rm","-rf",fileName,NULL};
+                        proceed("/bin/rm",argv);
+                        exit(EXIT_SUCCESS); 
+                }
+                char *newname=cut(dent->d_name); 
+                char *photos;
+
+                while(photos=strtok_r(newname,"_",&newname)){
+                        int i=0;
+                        char pet[30], pName[30], pAge[30];
+                        char *ph=photos;
+                        char *photo;
+                        
+                        while(photo=strtok_r(ph,";",&ph)){
+                                if(i==0){
+                                    char files[80]="/home/yudo/Documents/Modul2/petshop/";
+                                    strcat(files,photo);
+                                    char *argv[]={"mkdir","-p",files,NULL};
+                                    proceed("/bin/mkdir",argv);
+                                    strcpy(pet,photo);
+                                }
+                                if(i==1){
+                                    strcpy(pName,photo);
+                                }
+                                if(i==2){
+                                    strcpy(pAge,photo);
+                                }
+                                i++;
+                        }
+                        
+                        while((wait(NULL))>0);
+                        char newfile[100]="/home/yudo/Documents/Modul2/petshop/";
+                        strcat(newfile,dent->d_name);
+                  
+                        char dest[100]="/home/yudo/Documents/Modul2/petshop/";
+                        strcat(dest,pet);
+                        strcat(dest,"/");
+                        strcat(dest,pName);
+                        strcat(dest,".jpg");
+                        char *argv[]={"cp",newfile,dest,NULL};
+                        proceed("/bin/cp",argv);
+
+                        char file[50]="/home/yudo/Documents/Modul2/petshop/";
+                        strcat(file,pet);
+                        strcat(file,"/keterangan.txt");
+
+                        char ket[50];
+                        strcat(ket,"nama : ");
+                        strcat(ket,pName);
+                        strcat(ket,"\numur: ");
+                        strcat(ket,pAge);
+                        strcat(ket,"tahun\n\n");
+
+                        FILE *fp;
+                        fp=fopen(file,"a");
+                        fputs(ket,fp);
+                        fclose(fp);
+         }
+        char hapus[100]="/home/yudo/Documents/Modul2/petshop/";
+        strcat(hapus,dent->d_name);
+        char *args[]={"rm",hapus,NULL};
+        execv("/bin/rm",args);
+
+      }
+      closedir(dir);
+    }
+  return 0;
+}
+```
+```c
+char direct[50]="/home/yudo/Documents/Modul2/petshop";
+```
+Pertama deklarasi char `direct` yang menyimpan path folder yang akan dibuat. 
+
 - 2.a. Mengextract zip yang diberikan ke dalam folder “/home/[user]/modul2/petshop” dan menghapus folder-folder yang tidak dibutuhkan
 ```c
-    pid_t child_id;
-    int status;
-    char direct[]="/home/yudo/Documents/Modul2/petshop";
-    char FileName[]="petshop";
-  
-    struct dirent *dp;
-    DIR *dir = opendir(direct);
-
-    child_id = fork();
-
-    if (child_id < 0) {
-        exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
-    }
-
-    if (child_id == 0) {
-        // this is child
-
-        char *argv1[] = {"unzip", "pets.zip", "-d", direct, "*.jpg", NULL};
-        execv("/bin/unzip", argv1);
-
-    }
+            char *argv[]={"mkdir","-p",direct,NULL};
+            proceed("/bin/mkdir",argv);
 ```
-Pertama deklarasi char `direct` yang menyimpan alamat folder yang akan dibuat. Lalu program untuk mengextract zip dan menyimpannya dalam directory petshop ditaruh pada pointer `argv1[]` dengan nama program `unzip` dan dieksekusi dengan execv. . Digunakan `-d` untuk menunjukkan path yang akan dituju. Agar folder yang tidak dibutuhkan tidak ikut terextract maka ditambahkan `*.jpg`, hasilnya yang dieksekusi hanya file .jpg.
+Program untuk membuat directory petshop ditaruh pada pointer argv1[] dan proses dengan memanggil fungsi `proceed`. 
+```c
+            char *argv2[]={"unzip","-q","pets.zip","-d",direct,NULL};
+            execv("/usr/bin/unzip",argv2);
+```
+Program untuk meng-unzip dile yang ada di dalam zip ditaruh pada pointer `argv2[]`, agar file yang di unzip masuk ke folder petshop, digunakan command -d diikuti dengat path directory petshop.
+```c
+        DIR *dir=opendir(direct);
+        struct dirent *dent;
+        if(dir!=NULL)
+```
+Untuk mengakses folder petshop, digunakan `opendir(direct)`. Jika isi directory bukan NULL, program akan membaca file satu persatu.
+```c
+                else if(dent->d_type==DT_DIR){
+                        char fileName[100]="/home/yudo/Documents/Modul2/petshop/";
+                        strcat(fileName,dent->d_name);
+                        
+                        char *argv[]={"rm","-rf",fileName,NULL};
+                        proceed("/bin/rm",argv);
+                        exit(EXIT_SUCCESS); 
+                }
+```
+Jika yang terbaca bertipe `directory` akan masuk ke program penghapusan folder. Untuk menghapus folder yang tidak diperlukan, pertama membuat variabel untuk menyimpan path folder petshop. Lalu tipe folder digabungkan dengan path folder petshop menggunakan `strcat()`. Path folder yang akan dihapus tersimpan dalam variabel `filename`. Lalu membuat program yang akan menghapus folder yang tidak berguna dalam pointer `argv[]`, menggunakan command `-rf`diikuti path folder, dan diproses dengan memanggil fungsi `proceed`. 
+```c
+                char *newname=cut(dent->d_name); 
+```
+Membuat pointer `newname` yang diisi dengan nama file dimana `.jpg` sudah dihapus. Untuk menghapus penamaan .jpg dilakukan dengan memanggil fungsi `cut()`.
+```c
+                while(photos=strtok_r(newname,"_",&newname))
+```
+Untuk memisahkan tanda `_` untuk hewan yang berbeda namun dalam jenis yang sama, digunakan `strtok_r(cutss,"_",&cutss)`.
+```c
+                        while(photo=strtok_r(ph,";",&ph))
+```
+Penamaan file sekarang adalah `[jenis];[nama];[umur]`. Untuk membacanya satu satu digunakan `strtok_r(ph,";",&ph)`. 
+
+- 2.b. Membuat folder sesuai jenis peliharaan
+```c
+                                if(i==0){
+                                    char files[80]="/home/yudo/Documents/Modul2/petshop/";
+                                    strcat(files,photo);
+                                    char *argv[]={"mkdir","-p",files,NULL};
+                                    proceed("/bin/mkdir",argv);
+                                    strcpy(pet,photo);
+                                }
+```
+Jika yang terbaca adalah iterasi ke-nol atau jenis hewan maka membuat folder jenis hewan. Pertama membuat variabel files untuk menyimpan path folder pershop. Lalu path tersebut digabungkan dengan nama jenis menggunakan `strcat(files,photo)`. Berikutnya dibuat program untuk membuat folder baru dengan nama jenis hewan dalam pointer argv[] dan diproses dengan memanggil fungsi `proceed()`. 
+```c
+                                if(i==1){
+                                    strcpy(pName,photo);
+                                }
+```
+Jika yang terbaca adalah iterasi kesatu nama hewan maka akan mengcopy ke variabel `pName`.
+```c
+                                if(i==2){
+                                    strcpy(pAge,photo);
+                                }
+```
+Jika yang terbaca adalah iterasi kedua atau umur hewan maka akan mengcopy ke variabel `pAge`.
+```c
+                        while((wait(NULL))>0);
+                        char newfile[100]="/home/yudo/Documents/Modul2/petshop/";
+                        strcat(newfile,dent->d_name);
+```
+Membuat char `newfile` yang berisi path folder petshop. Selanjutnya digabungkan dengan nama jenis hewan menggunakan fungsi `strcat`. Sekarang  char `newfile` menyimpan path folder jenis hewan.
+
+- 2.c&d. Memindahkan foto ke folder dengan kategori yang sesuai dan di rename dengan nama peliharaan.
+```c
+                        char dest[100]="/home/yudo/Documents/Modul2/petshop/";
+                        strcat(dest,pet);
+                        strcat(dest,"/");
+                        strcat(dest,pName);
+                        strcat(dest,".jpg");
+                        char *argv[]={"cp",newfile,dest,NULL};
+                        proceed("/bin/cp",argv);
+```
+Membuat char `dest` yang berisi path folder petshop. Selanjutnya char `dest` digabungkan dengan `[jenis hewan]/[nama hewan].jpg`. Sekarang char `dest` menyimpan path foto hewan dalam folder jenis hewan. Selanjutnya membuat pointer `argv[]` untuk menyimpan program mengcopy foto hewan dari folder petshop ke dalam folder jenis hewan. Diproses dengan memanggil fungsi `proceed`.
+
+- 2.e. Membuat file `keterangan.txt` di setiap folder.
+```c
+                        char file[50]="/home/yudo/Documents/Modul2/petshop/";
+                        strcat(file,pet);
+                        strcat(file,"/keterangan.txt");
+```
+Membuat char `file` yang berisi path folder petshop, lalu digabungkan dengan string `[jenis hewan]/keterangan.txt`, sehingga char `file` menyimpan path file `keterangan.txt` di dalam folder jenis hewan.
+```c
+                        char ket[50];
+                        strcat(ket,"nama : ");
+                        strcat(ket,pName);
+                        strcat(ket,"\numur: ");
+                        strcat(ket,pAge);
+                        strcat(ket,"tahun\n\n");
+```
+Membuat char `ket` untuk menyimpan isi file `keterangan.txt`. Caranya dengan menggabungkan string yang sesuai format soal dengan nama hewan dan umur hewan, menggunakan fungsi `strcat`.
+```c
+                        FILE *fp;
+                        fp=fopen(file,"a");
+                        fputs(ket,fp);
+                        fclose(fp);
+```
+Selanjutnya mengakses file `keterangan.txt` lalu memesukkan string keterangan hewan ke dalam file.
+```c
+        char hapus[100]="/home/yudo/Documents/Modul2/petshop/";
+        strcat(hapus,dent->d_name);
+        char *args[]={"rm",hapus,NULL};
+        execv("/bin/rm",args);
+```
+Setelah foto dipindah ke dalam folder sesuai jenisnya, foto yang masih di luar folder jenis hewan dihapus. Caranya dengan membuat char yang menyimpan path folder petshop, lalu digabungkan dengan nama file foto. Lalu diproses untuk diremove filenya dengan `rm [path file]`.
+
+**Dokumentasi**
+Isi folder petshop:
+![alt text](https://i.postimg.cc/N0XccGZV/Virtual-Box-Ubuntu-20-04-2-0-25-04-2021-21-03-57.png)
+
+Isi folder cat:
+![alt text](https://i.postimg.cc/wx0nns7M/Virtual-Box-Ubuntu-20-04-2-0-25-04-2021-21-04-42.png)
+
+Isi file `keterangan.txt` dalam folder cat:
+![alt text](https://i.postimg.cc/NGdfbFt7/Virtual-Box-Ubuntu-20-04-2-0-25-04-2021-21-12-45.png)
+
+### Kendala
+Kesulitan dalam memisahkan jenis, nama, dan umur dari penamaan file. Solusinya dengan memanfaatkan fungsi `strtok()`.
