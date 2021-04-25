@@ -261,6 +261,7 @@ Pertama deklarasi char `direct` yang menyimpan alamat folder yang akan dibuat. L
 ### **Penyelesaian Soal 3**
 ### **Soal 3a**
 Ranora harus membuat sebuah program C yang dimana setiap 40 detik membuat sebuah direktori dengan nama sesuai timestamp [YYYY-mm-dd_HH:ii:ss].
+
 Berikut merupakan fungsi untuk membuat sebuah direktori
 ```
 void folder(char *foldername){
@@ -272,6 +273,7 @@ void folder(char *foldername){
 ```
 ### **Soal 3b**
 Setiap direktori yang sudah dibuat diisi dengan 10 gambar yang didownload dari https://picsum.photos/, dimana setiap gambar akan didownload setiap 5 detik. Setiap gambar yang didownload akan diberi nama dengan format timestamp [YYYY-mm-dd_HH:ii:ss] dan gambar  ersebut berbentuk persegi dengan ukuran (n%1000) + 50 pixel dimana n adalah detik Epoch Unix.
+
 Berikut merupakan fungsi untuk mengunduh 10 gambar dengan jeda 5 detik dari https://picsum.photos/ dengan ketentuan ukuran `(n%1000) + 50 pixel` dimana `n` adalah detik Epoch Unix. Dengan menghitung nilai dari (n%1000) + 50 kemudian disimpan dalam variable dan nantinya akan dimasukkan ke dalam link https://picsum.photos/.
 
 ``` 
@@ -300,6 +302,7 @@ void downloader(char *foldername){
 
 ### **Soal 3c**
 Setelah direktori telah terisi dengan 10 gambar, program tersebut akan membuat sebuah file “status.txt”, dimana didalamnya berisi pesan “Download Success” yang terenkripsi dengan teknik Caesar Cipher dan dengan shift 5. Caesar Cipher adalah Teknik enkripsi sederhana yang dimana dapat melakukan enkripsi string sesuai dengan shift/key yang kita tentukan. Misal huruf “A” akan dienkripsi dengan shift 4 maka akan menjadi “E”. Karena Ranora orangnya perfeksionis dan rapi, dia ingin setelah file tersebut dibuat, direktori akan di zip dan direktori akan didelete, sehingga menyisakan hanya file zip saja.
+
 Berikut merupakan fungsi untuk membuat file status.txt yang didalamnya terdapat pesan Download Success yang nantinya akan dienkripsi menggunakan Caesar Cipher. Kemudian file tersebut akan disimpan kedalam direktori yang sudah dibuat sebelumnya.
 ```
 void message(char *foldername){
@@ -359,6 +362,7 @@ void archive(char *foldername){
 
 ### **Soal 3d**
 Untuk mempermudah pengendalian program, pembimbing magang Ranora ingin rogram tersebut akan men-generate sebuah program “Killer” yang executable, dimana rogram tersebut akan menterminasi semua proses program yang sedang berjalan dan kan menghapus dirinya sendiri setelah program dijalankan. Karena Ranora menyukai esuatu hal yang baru, maka Ranora memiliki ide untuk program “Killer” yang dibuat antinya harus merupakan program bash.
+
 Pembuatan program killer adalah dengan memanggil fungsi killer sebelum proses loop
 
 ```
@@ -381,11 +385,14 @@ Pembuatan program killer adalah dengan memanggil fungsi killer sebelum proses lo
 
 ```
 Didalam fungsi killer terdapat syntax untuk membuat file killer.
+
 ```
 FILE *killer = fopen("killer.sh", "w");
 ```
 
 ### **Soal 3e**
+Pembimbing magang Ranora juga ingin nantinya program utama yang dibuat Ranora dapat dijalankan di dalam dua mode. Untuk mengaktifkan mode pertama, program harus dijalankan dengan argumen -z, dan Ketika dijalankan dalam mode pertama, program utama akan langsung menghentikan semua operasinya Ketika program Killer dijalankan. Sedangkan untuk mengaktifkan mode kedua, program harus dijalankan dengan argumen -x, dan Ketika dijalankan dalam mode kedua, program utama akan berhenti namun membiarkan proses di setiap direktori yang masih berjalan hingga selesai (Direktori yang sudah dibuat akan mendownload gambar sampai selesai dan membuat file txt, lalu zip dan delete direktori).
+
 Berikut merupakan fungsi untuk membuat program killer yang merupakan program bash untuk menghentikan proses. Program yang dibuat sesuai dengan argumen yang diinput saat program dijalankan. Untuk argumen `-z` script akan berisi command yang akan menghentikan seluruh proses terjadi. Sedangkan argumen `-x` akan berisi command untuk menghentikan progrma utama namun membiarkan proses di setiap direktori yang masih berjalan hingga selesai (Direktori yang sudah dibuat akan mendownload gambar sampai selesai dan membuat file txt, lalu zip dan delete direktori) dengan passing value `getpid()` saat memanggil fungsi.
 
 
@@ -432,7 +439,10 @@ int main(int argc, char const *argv[]) {
 ```
 
 ### **Kendala :**
+
 •	Program daemon berhenti setelah menyelesaikan satu proses saja
+
 •	Program berhenti setelah melakukan zip file
+
 •	Tidak ada spasi pada hasil enkripsi `Download Success` 
 
