@@ -229,13 +229,16 @@ Setelah selesai dizip, maka program akan kembali di-fork. folder dan file zip ya
 
 **Dokumentasi**
 ![image](https://user-images.githubusercontent.com/62102884/115996471-fa5d3780-a611-11eb-8d39-59af2fbdb500.png)
-isi folder _/tmp_ pada tanggal 9 APR 2021 pukul 16:22:00. Terdapat fie yang didownload dan folder dari hasil ekstraknya.
+isi folder __/tmp__ pada tanggal 9 APR 2021 pukul 16:22:00. Terdapat fie yang didownload dan folder dari hasil ekstraknya.
 
 ![image](https://user-images.githubusercontent.com/62102884/115996646-b1f24980-a612-11eb-9dad-caae17710680.png)
 isi folder pada 9 APR 2021 pukul 22:22:00. Dapat dilihat zip dan folder yang telah didownload sudah dihapus.
 
 ![image](https://user-images.githubusercontent.com/62102884/115996662-c7677380-a612-11eb-8212-18e4325fc89d.png)
-pada folder _/home/[user]_ terdapat file zip  _Lopyu_Sten=vany.zip_ 
+pada folder _/home/[user]_ terdapat file zip  __Lopyu_Stevany.zip__
+
+![image](https://user-images.githubusercontent.com/62102884/115996922-d26ed380-a613-11eb-90e4-df35e6baf112.png)
+isi daripada file zip __Lopyu_Stephany.zip__
 
 
 
