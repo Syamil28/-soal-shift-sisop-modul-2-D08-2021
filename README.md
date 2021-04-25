@@ -516,7 +516,8 @@ Isi file `keterangan.txt` dalam folder cat:
 Kesulitan dalam memisahkan jenis, nama, dan umur dari penamaan file. Solusinya dengan memanfaatkan fungsi `strtok()`.
 
 
-### **Penyelesaian Soal 3**
+
+## **Soal 3**
 ### **Soal 3a**
 Ranora harus membuat sebuah program C yang dimana setiap 40 detik membuat sebuah direktori dengan nama sesuai timestamp [YYYY-mm-dd_HH:ii:ss].
 Berikut merupakan fungsi untuk membuat sebuah direktori
@@ -528,6 +529,11 @@ void folder(char *foldername){
   }   
 }
 ```
+
+## **Output**
+![image](https://user-images.githubusercontent.com/25588630/115997250-b4ea3b80-a60c-11eb-9ea1-d29205e1cd5b.png)
+
+
 ### **Soal 3b**
 Setiap direktori yang sudah dibuat diisi dengan 10 gambar yang didownload dari https://picsum.photos/, dimana setiap gambar akan didownload setiap 5 detik. Setiap gambar yang didownload akan diberi nama dengan format timestamp [YYYY-mm-dd_HH:ii:ss] dan gambar  ersebut berbentuk persegi dengan ukuran (n%1000) + 50 pixel dimana n adalah detik Epoch Unix.
 Berikut merupakan fungsi untuk mengunduh 10 gambar dengan jeda 5 detik dari https://picsum.photos/ dengan ketentuan ukuran (n%1000) + 50 pixel dimana n adalah detik Epoch Unix. Dengan menghitung nilai dari (n%1000) + 50 kemudian disimpan dalam variable dan nantinya akan dimasukkan ke dalam link https://picsum.photos/.
@@ -554,6 +560,12 @@ void downloader(char *foldername){
     }
 }
 ```
+
+
+## **Output**
+![image](https://user-images.githubusercontent.com/25588630/115997306-da774500-a60c-11eb-952c-edb88a9206fa.png)
+
+
 ### **Soal 3c**
 Setelah direktori telah terisi dengan 10 gambar, program tersebut akan membuat sebuah file “status.txt”, dimana didalamnya berisi pesan “Download Success” yang terenkripsi dengan teknik Caesar Cipher dan dengan shift 5. Caesar Cipher adalah Teknik enkripsi sederhana yang dimana dapat melakukan enkripsi string sesuai dengan shift/key yang kita tentukan. Misal huruf “A” akan dienkripsi dengan shift 4 maka akan menjadi “E”. Karena Ranora orangnya perfeksionis dan rapi, dia ingin setelah file tersebut dibuat, direktori akan di zip dan direktori akan didelete, sehingga menyisakan hanya file zip saja.
 Berikut merupakan fungsi untuk membuat file status.txt yang didalamnya terdapat pesan Download Success yang nantinya akan dienkripsi menggunakan Caesar Cipher. Kemudian file tersebut akan disimpan kedalam direktori yang sudah dibuat sebelumnya.
@@ -612,6 +624,11 @@ void archive(char *foldername){
   }  
 }
 ```
+### **Output**
+![image](https://user-images.githubusercontent.com/25588630/115997214-8d936e80-a60c-11eb-96fb-b3e602a1820a.png)
+
+![image](https://user-images.githubusercontent.com/25588630/115997175-6c328280-a60c-11eb-814e-24b09eb11fa0.png)
+
 ### **Soal 3d**
 Untuk mempermudah pengendalian program, pembimbing magang Ranora ingin program tersebut akan men-generate sebuah program “Killer” yang executable, dimana program tersebut akan menterminasi semua proses program yang sedang berjalan dan akan menghapus dirinya sendiri setelah program dijalankan. Karena Ranora menyukai sesuatu hal yang baru, maka Ranora memiliki ide untuk program “Killer” yang dibuat nantinya harus merupakan program bash.
 Pembuatan program bash dilakukan dengan memanggil fungsi killer sebelum proses loop daemon dilakukan.
