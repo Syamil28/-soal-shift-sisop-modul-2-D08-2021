@@ -391,7 +391,7 @@ Pertama deklarasi char `direct` yang menyimpan path folder yang akan dibuat.
             char *argv[]={"mkdir","-p",direct,NULL};
             proceed("/bin/mkdir",argv);
 ```
-Program untuk membuat directory petshop ditaruh pada pointer argv1[] dan proses dengan memanggil fungsi `proceed`. 
+Program untuk membuat directory petshop ditaruh pada pointer argv[] dan proses dengan memanggil fungsi `proceed`. 
 ```c
             char *argv2[]={"unzip","-q","pets.zip","-d",direct,NULL};
             execv("/usr/bin/unzip",argv2);
