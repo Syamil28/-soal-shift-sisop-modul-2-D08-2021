@@ -512,3 +512,176 @@ Isi file `keterangan.txt` dalam folder cat:
 
 ### Kendala
 Kesulitan dalam memisahkan jenis, nama, dan umur dari penamaan file. Solusinya dengan memanfaatkan fungsi `strtok()`.
+
+
+### **Penyelesaian Soal 3**
+### **Soal 3a**
+Ranora harus membuat sebuah program C yang dimana setiap 40 detik membuat sebuah direktori dengan nama sesuai timestamp [YYYY-mm-dd_HH:ii:ss].
+Berikut merupakan fungsi untuk membuat sebuah direktori
+```
+void folder(char *foldername){
+  if(fork()==0){  
+    char *makedir[] = {"mkdir", "-p",foldername, NULL};
+    execv("/bin/mkdir", makedir);
+  }   
+}
+```
+### **Soal 3b**
+Setiap direktori yang sudah dibuat diisi dengan 10 gambar yang didownload dari https://picsum.photos/, dimana setiap gambar akan didownload setiap 5 detik. Setiap gambar yang didownload akan diberi nama dengan format timestamp [YYYY-mm-dd_HH:ii:ss] dan gambar  ersebut berbentuk persegi dengan ukuran (n%1000) + 50 pixel dimana n adalah detik Epoch Unix.
+Berikut merupakan fungsi untuk mengunduh 10 gambar dengan jeda 5 detik dari https://picsum.photos/ dengan ketentuan ukuran (n%1000) + 50 pixel dimana n adalah detik Epoch Unix. Dengan menghitung nilai dari (n%1000) + 50 kemudian disimpan dalam variable dan nantinya akan dimasukkan ke dalam link https://picsum.photos/.
+``` 
+void downloader(char *foldername){
+  time_t rawtime;
+  int i,size;
+  char pic_name[204],buffer[100],url[100];
+
+  for(i=0;i<10;i++){
+      time(&rawtime);
+      strftime(buffer, 100, "%Y-%m-%d_%X", localtime(&rawtime));
+        
+      sprintf(pic_name,"%s/%s.jpg",foldername,buffer);
+      size = (int)time(NULL);
+      size = (size%1000)+50;
+      sprintf(url,"https://picsum.photos/%d",size);
+
+      if(fork()==0){
+          char *getpic[] = {"wget", "-qO", pic_name, url, NULL};
+          execv("/usr/bin/wget", getpic);
+      }
+        sleep(5);
+    }
+}
+```
+### **Soal 3c**
+Setelah direktori telah terisi dengan 10 gambar, program tersebut akan membuat sebuah file “status.txt”, dimana didalamnya berisi pesan “Download Success” yang terenkripsi dengan teknik Caesar Cipher dan dengan shift 5. Caesar Cipher adalah Teknik enkripsi sederhana yang dimana dapat melakukan enkripsi string sesuai dengan shift/key yang kita tentukan. Misal huruf “A” akan dienkripsi dengan shift 4 maka akan menjadi “E”. Karena Ranora orangnya perfeksionis dan rapi, dia ingin setelah file tersebut dibuat, direktori akan di zip dan direktori akan didelete, sehingga menyisakan hanya file zip saja.
+Berikut merupakan fungsi untuk membuat file status.txt yang didalamnya terdapat pesan Download Success yang nantinya akan dienkripsi menggunakan Caesar Cipher. Kemudian file tersebut akan disimpan kedalam direktori yang sudah dibuat sebelumnya.
+```
+void message(char *foldername){
+  char dir[100];
+  char message[25] = {"Download Success"};
+  char temp;
+  int i;
+  int shift;
+
+  strcpy(dir, foldername);
+  strcat(dir, "/");
+  strcat(dir, "status.txt");
+  FILE *status = fopen(dir, "w");
+
+  for(i = 0; i<strlen(message);i++){
+    temp = message[i];
+    if(temp>='a'&&temp<='z'){
+      temp += shift;
+
+      if(temp > 'z'){
+        temp+=('a'-'z');
+      }else if(temp<'a'){
+        temp+=('z'-'a');
+      }
+
+    }
+
+    if(temp>='A'&&temp<='Z'){
+      temp += shift;
+
+      if(temp > 'Z'){
+        temp+=('A'-'Z');
+      }else if(temp<'A'){
+        temp+=('Z'-'A');
+      }
+
+    }
+    fputc(temp, status);
+  }
+  fclose(status);
+  
+}
+```
+
+Fungsi dibawah ini merupakan fungsi untuk membuat direktori yang berisikan 10 gambar dan status.txt menjadi .zip
+```
+void archive(char *foldername){
+  char temp[100];
+  if(fork()==0){
+    strcpy(temp, foldername);
+    strcat(temp, ".zip");
+    char *argv[] = {"zip", temp, "-rm", foldername, NULL};
+    execv("/bin/zip", argv);
+  }  
+}
+```
+### **Soal 3d**
+Untuk mempermudah pengendalian program, pembimbing magang Ranora ingin program tersebut akan men-generate sebuah program “Killer” yang executable, dimana program tersebut akan menterminasi semua proses program yang sedang berjalan dan akan menghapus dirinya sendiri setelah program dijalankan. Karena Ranora menyukai sesuatu hal yang baru, maka Ranora memiliki ide untuk program “Killer” yang dibuat nantinya harus merupakan program bash.
+Pembuatan program bash dilakukan dengan memanggil fungsi killer sebelum proses loop daemon dilakukan.
+
+```
+  sid = setsid();
+  if (sid < 0) {
+    exit(EXIT_FAILURE);
+  }
+
+  killer(argv,(int)getpid());
+
+  close(STDIN_FILENO);
+  close(STDOUT_FILENO);
+  close(STDERR_FILENO);
+
+  while (1) {
+```
+}
+
+Dimana didalam fungsi killer terdapat syntax untuk membuat program killer.
+```
+FILE *killer = fopen("killer.sh", "w");
+```
+
+### **Soal 3e**
+Berikut merupakan fungsi untuk membuat program killer yang merupakan program bash untuk menghentikan proses. Program yang dibuat sesuai dengan argumen yang diinput saat program dijalankan. Untuk argumen -z script akan berisi command yang akan menghentikan seluruh proses terjadi. Sedangkan argumen -x akan berisi command untuk menghentikan progrma utama namun membiarkan proses di setiap direktori yang masih berjalan hingga selesai (Direktori yang sudah dibuat akan mendownload gambar sampai selesai dan membuat file txt, lalu zip dan delete direktori) dengan passing value getpid() saat memanggil fungsi.
+```
+void killer(char const *argv[], int pid){
+  FILE *killer = fopen("killer.sh", "w");
+  fprintf(killer,"#!/bin/bash\n");
+  if(strcmp(argv[1],"-z") == 0){
+      fprintf(killer,"killall -9 %s\n",argv[0]);
+  }
+  else if(strcmp(argv[1],"-x") == 0){
+      fprintf(killer,"kill -15 %d\n",pid);
+  }
+    
+  fprintf(killer,"rm killer.sh\n");
+  fclose(killer);
+     
+}
+```
+
+Berikut merupakan fungsi main() untuk memanggil  fungsi diatas dengan dengan jeda setiap 40 detik dan passing value untuk nama folder sesuai dengan nama sesuai timestamp [YYYY-mm-dd_HH:ii:ss].
+
+```
+int main(int argc, char const *argv[]) {
+  char foldername[100];
+  time_t rawtime;
+
+....
+  killer(argv,(int)getpid());
+....
+
+  while (1) {
+    // Tulis program kalian di sini
+    time(&rawtime);
+    strftime(foldername, 100, "%Y-%m-%d_%X", localtime(&rawtime));
+    folder(foldername);   
+    downloader(foldername);
+    message(foldername);
+    archive(foldername);     
+    sleep(40);    
+  }
+```
+
+
+### **Kendala: **
+•	Program daemon berhenti setelah menyelesaikan satu proses saja
+
+•	Program berhenti setelah melakukan zip file
+
+•	Tidak ada spasi pada hasil enkripsi `Download Success` 
+
